@@ -47,7 +47,7 @@ namespace Travel.Controllers
     {
       var query = _db.Reviews.AsQueryable();
       List<Review> reviews = _db.Reviews.ToList();
-      var reviewsCount =
+      var countReviews =
         from review in reviews
         group review by review.City into reviewGroup
         select new
@@ -55,7 +55,7 @@ namespace Travel.Controllers
           City = reviewGroup.Key,
           ReviewCount = reviewGroup.Count(),
         };
-      var sortedReviews = reviewsCount.OrderBy(o => o.ReviewCount).Reverse();
+      var sortedReviews = countReviews.OrderBy(o => o.ReviewCount).Reverse();
       var mostReviews = sortedReviews.ElementAt(0).City;
       query = query.Where(entry => entry.City == mostReviews);
       return query.ToList();
