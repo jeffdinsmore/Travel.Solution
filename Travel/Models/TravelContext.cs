@@ -8,7 +8,6 @@ namespace Travel.Models
             : base(options)
         {
         }
-
-        public DbSet<Destination> Destinations { get; set; }
+        public DbSet<Review> Reviews { get; set; }
     }
 }
