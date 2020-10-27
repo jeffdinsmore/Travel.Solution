@@ -25,34 +25,41 @@ namespace Travel.Controllers
     }
 
     // GET api/reviews
+    // [HttpGet]
+    // public ActionResult<IEnumerable<Review>> Get(string city, string country)
+    // {
+    //   var query = _db.Reviews.AsQueryable();
+
+    //   if (city != null)
+    //   {
+    //     query = query.Where(entry => entry.City == city);
+    //   }
+    //   if (country != null)
+    //   {
+    //     query = query.Where(entry => entry.Country == country);
+    //   }
+
+    //   return query.ToList();
+    // }
+
     [HttpGet]
-    public ActionResult<IEnumerable<Review>> Get(string city, string country)
+    public ActionResult<IEnumerable<Review>> Get(string car)
     {
       var query = _db.Reviews.AsQueryable();
-
-      if (city != null)
-      {
-        query = query.Where(entry => entry.City == city);
-      }
-      if (country != null)
-      {
-        query = query.Where(entry => entry.Country == country);
-      }
-
       List<Review> reviews = _db.Reviews.ToList();
-      var mostReviews = 
+      var reviewsCount =
         from review in reviews
         group review by review.City into reviewGroup
         select new
         {
-          city = reviewGroup.Key,
+          City = reviewGroup.Key,
           ReviewCount = reviewGroup.Count(),
         };
-      var chair = mostReviews;
-      return Ok(mostReviews);
-        
-
-      // return query.ToList();
+      var sortedReviews = reviewsCount.OrderBy(o => o.ReviewCount).Reverse();
+      var mostReviews = sortedReviews.ElementAt(0).City;
+      query = query.Where(entry => entry.City == mostReviews);
+      return query.ToList();
+      // return Ok(sortedReviews);
     }
 
     //   // GET api/reviews
@@ -73,8 +80,8 @@ namespace Travel.Controllers
     //   {
     //     query = query.Where(entry => entry.Rating == rating);
     //   }
-    
-      
+
+
     //   return query.ToList();
     // }
 
